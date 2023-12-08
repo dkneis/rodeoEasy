@@ -7,6 +7,6 @@ Author: David Kneis <david.kneis@tu-dresden.de>
 Maintainer: David Kneis <david.kneis@tu-dresden.de>
 Description: The package provides high-level functions to build and run models rooted in simultaneous ODE. It is primarily meant for teaching purposes.
 Imports: rodeo, deSolve, readxl, readODS
-License: GPL (>= 2)
+License: GPL-3 + file LICENSE
 Encoding: UTF-8
 RoxygenNote: 7.2.3
