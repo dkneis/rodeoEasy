@@ -11,8 +11,8 @@
 #'   be (named) numeric vectors used to update the initial values and parameters
 #'   provided as defaults in the workbook from which the model was imported.
 #'   The vectors for the individual scenarios can differ in length but their
-#'   length could also be consistent across scenarios (so you could also pass a
-#'   \code{data.frame}). If \code{scenarios} is set to \code{NULL}, only the
+#'   length could also be consistent across scenarios.
+#'   If \code{scenarios} is set to \code{NULL}, only the
 #'   default scenario will be run. See details and examples.
 #' @param times Numeric vector defining the times for which the future
 #'   state of the system is computed.
@@ -43,6 +43,9 @@
 #'
 #' # build the model
 #' m <- build(system.file("models/oxygen.xlsx", package="rodeoEasy"))
+#' 
+#' # implement specific functions used in RHS of ODE
+#' DO_sat <- function(T) { exp(7.712 - 1.314 * log(T + 45.93)) }
 #' 
 #' # run with defaults
 #' x <- run.scenarios(model=m, times=seq(0, 12, 0.1),
