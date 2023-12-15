@@ -2,6 +2,7 @@
 
 export(build)
 export(run.scenarios)
+export(show.scenarios)
 import(deSolve)
 import(readODS)
 import(readxl)
