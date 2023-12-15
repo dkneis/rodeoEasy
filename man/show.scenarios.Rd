@@ -54,7 +54,9 @@ x <- run.scenarios(model=m, times=seq(0, 12, 0.1),
 # custom plotting
 par(mfrow=c(1,2))
 show.scenarios(x, "DO")
-show.scenarios(x, "OM")
+keyColors <- show.scenarios(x, "OM")
+legend("topright", bty="n", lty=1, col=keyColors,
+  legend=names(keyColors))
 par(mfrow=c(1,1))
 }
 \seealso{
