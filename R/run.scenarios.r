@@ -87,7 +87,7 @@ run.scenarios <- function(model, times, scenarios=NULL,
     model$setVars(v.def)
     model$setPars(p.def)
     out <- rbind(out, data.frame(scenario="default",
-      model$dynamics(times=times, fortran=FALSE)))
+      model$dynamics(times=times, fortran=FALSE, ...)))
   } else {
     for (s in names(scenarios)) {
       # set defaults first
