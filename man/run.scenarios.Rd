@@ -10,7 +10,8 @@ run.scenarios(
   scenarios = NULL,
   plot.vars = TRUE,
   plot.pros = FALSE,
-  leg = "topright"
+  leg = "topright",
+  ...
 )
 }
 \arguments{
@@ -34,6 +35,11 @@ default scenario will be run. See details and examples.}
 \item{plot.pros}{Logical. Plot the dynamics of process rates?}
 
 \item{leg}{Keyword to set the position of the legend (if plots are created).}
+
+\item{...}{Possible optional arguments passed to the numerical solver,
+namely \code{\link[deSolve]{lsoda}}. Can be used, for example, to limit
+the maximum step size through the \code{hmax} argument if boundary
+vary on short time scales.}
 }
 \value{
 A data frame with at least three columns and one row for each

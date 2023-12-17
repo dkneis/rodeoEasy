@@ -19,6 +19,10 @@
 #' @param plot.vars Logical. Plot the dynamics of all state variables?
 #' @param plot.pros Logical. Plot the dynamics of process rates?
 #' @param leg Keyword to set the position of the legend (if plots are created).
+#' @param ... Possible optional arguments passed to the numerical solver,
+#'   namely \code{\link[deSolve]{lsoda}}. Can be used, for example, to limit
+#'   the maximum step size through the \code{hmax} argument if boundary
+#'   vary on short time scales.
 #'
 #' @return A data frame with at least three columns and one row for each
 #'   time requested via the \code{times} argument. The first column
@@ -58,7 +62,7 @@
 #' )
 
 run.scenarios <- function(model, times, scenarios=NULL,
-  plot.vars=TRUE, plot.pros=FALSE, leg="topright") {
+  plot.vars=TRUE, plot.pros=FALSE, leg="topright", ...) {
   # check inputs
   if (class(model)[1] != "rodeo")
     stop("'model' not of class 'rodeo'; Did you run 'build'?")
@@ -104,7 +108,7 @@ run.scenarios <- function(model, times, scenarios=NULL,
       model$setVars(v.scn)
       model$setPars(p.scn)
       out <- rbind(out, data.frame(scenario=s,
-        model$dynamics(times=times, fortran=FALSE)))
+        model$dynamics(times=times, fortran=FALSE, ...)))
     }
   }
   # plot if requested
