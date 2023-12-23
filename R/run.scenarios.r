@@ -48,9 +48,6 @@
 #' # build the model
 #' m <- build(system.file("models/oxygen.xlsx", package="rodeoEasy"))
 #' 
-#' # implement specific functions used in RHS of ODE
-#' DO_sat <- function(T) { exp(7.712 - 1.314 * log(T + 45.93)) }
-#' 
 #' # run with defaults
 #' x <- run.scenarios(model=m, times=seq(0, 12, 0.1),
 #'   scenarios=NULL

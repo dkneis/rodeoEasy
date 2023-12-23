@@ -27,8 +27,8 @@ The file provided as \code{workbook} must contain at least the four
      are 'name', 'unit', 'description', 'default'.
   \item{'pars'} Defines the parameters of the model. Mandatory columns
      are the same as for sheet 'vars'.
-  \item{'funs'} Declares the names of functions used in the model
-     equations. Mandatory columns are the same as for sheet 'vars'.
+  \item{'funs'} Declares and possibly defines functions used in the model
+     equations. Mandatory columns are 'name' and 'code'.
   \item{'eqns'} Specifies the model equations. Mandatory columns
      are 'name', 'unit', 'description', 'rate' plus one column for
      every state variable of the model. The 'rate' columns holds the
@@ -39,6 +39,11 @@ The best way to understand the contents of the workbook is to study the
 examples in the folder 'models' shipped with the package. Type
 \code{system.file("models", package="rodeoEasy")} at the R prompt to see
 where this folder is installed on your system.
+
+The sheet 'funs' may contain a mixture of both intrinsic and user defined
+functions. Intrinsic functions can be declared with a single line and the
+column 'code' can be filled with an R comment like, e.g. '# intrinsic',
+to show that the existing function will not be overloaded.
 }
 \examples{
 

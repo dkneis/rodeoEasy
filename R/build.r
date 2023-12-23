@@ -17,8 +17,8 @@
 #'      are 'name', 'unit', 'description', 'default'.
 #'   \item{'pars'} Defines the parameters of the model. Mandatory columns
 #'      are the same as for sheet 'vars'.
-#'   \item{'funs'} Declares the names of functions used in the model
-#'      equations. Mandatory columns are the same as for sheet 'vars'.
+#'   \item{'funs'} Declares and possibly defines functions used in the model
+#'      equations. Mandatory columns are 'name' and 'code'.
 #'   \item{'eqns'} Specifies the model equations. Mandatory columns
 #'      are 'name', 'unit', 'description', 'rate' plus one column for
 #'      every state variable of the model. The 'rate' columns holds the
@@ -29,6 +29,11 @@
 #' examples in the folder 'models' shipped with the package. Type
 #' \code{system.file("models", package="rodeoEasy")} at the R prompt to see
 #' where this folder is installed on your system.
+#' 
+#' The sheet 'funs' may contain a mixture of both intrinsic and user defined
+#' functions. Intrinsic functions can be declared with a single line and the
+#' column 'code' can be filled with an R comment like, e.g. '# intrinsic',
+#' to show that the existing function will not be overloaded.
 #'
 #' @seealso Look at \code{\link{run.scenarios}} and other functions of this
 #'   package for how to run a simulation using the built model.
@@ -52,7 +57,7 @@ build <- function(workbook) {
   sheets.needed <- list(
     vars = c("name","unit","description","default"),
     pars = c("name","unit","description","default"),
-    funs = c("name","unit","description"),
+    funs = c("name","code"),
     eqns = c("name","unit","description","rate")
   )
   # import sheets
@@ -70,7 +75,7 @@ build <- function(workbook) {
       stop(paste0("failed to read required sheet '",s,"' from '",workbook,"'"))
     })
   }
-  # update needed colums in sheet with equations
+  # update needed columns in sheet with equations
   sheets.needed[["eqns"]] <- c(sheets.needed[["eqns"]], x[["vars"]][,"name"])
   # check sheets
   for (s in names(sheets.needed)) {
@@ -86,10 +91,24 @@ build <- function(workbook) {
   x[["pros"]] <- with(x, eqns[,c("name","unit","rate","description")])
   names(x[["pros"]])[names(x[["pros"]]) == "rate"] <- "expression"
   x[["eqns"]] <- NULL
+  # make user-defined functions available
+  for (f in unique(x[["funs"]][,"name"])) {
+    code <- x[["funs"]][x[["funs"]][,"name"] == f, "code"]
+    code <- paste(code, collapse="\n")
+    tryCatch(
+      eval(parse(text=code), envir=globalenv())
+    , error = function(e) {
+      stop(paste0("function '",f,"' define on sheet 'funs' of workbook '",
+        workbook,"' could not be parsed and evaluated"))
+    })
+  }
+  x[["funs"]] <- data.frame(name=unique(x[["funs"]][,"name"]),
+    unit="not provided; see possible commments in code", description="see code")
   # build and compile model object
   m <- with(x, rodeo$new(vars=vars, pars=pars, funs=funs, pros=pros, stoi=stoi,
     asMatrix=T, dim=1))
   m$compile(fortran=FALSE)
+  
   # return object
   m
 }
