@@ -11,6 +11,7 @@ run.scenarios(
   plot.vars = TRUE,
   plot.pros = FALSE,
   leg = "topright",
+  mar = c(4.5, 4.1, 1, 1),
   ...
 )
 }
@@ -35,6 +36,9 @@ default scenario will be run. See details and examples.}
 \item{plot.pros}{Logical. Plot the dynamics of process rates?}
 
 \item{leg}{Keyword to set the position of the legend (if plots are created).}
+
+\item{mar}{Numeric vector of length 4 to control figure margins. See the
+\code{mar} tag of \code{\link[graphics]{par}}.}
 
 \item{...}{Possible optional arguments passed to the numerical solver,
 namely \code{\link[deSolve]{lsoda}}. Can be used, for example, to limit

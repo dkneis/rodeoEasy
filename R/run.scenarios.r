@@ -19,6 +19,8 @@
 #' @param plot.vars Logical. Plot the dynamics of all state variables?
 #' @param plot.pros Logical. Plot the dynamics of process rates?
 #' @param leg Keyword to set the position of the legend (if plots are created).
+#' @param mar Numeric vector of length 4 to control figure margins. See the
+#'   \code{mar} tag of \code{\link[graphics]{par}}.
 #' @param ... Possible optional arguments passed to the numerical solver,
 #'   namely \code{\link[deSolve]{lsoda}}. Can be used, for example, to limit
 #'   the maximum step size through the \code{hmax} argument if boundary
@@ -59,7 +61,8 @@
 #' )
 
 run.scenarios <- function(model, times, scenarios=NULL,
-  plot.vars=TRUE, plot.pros=FALSE, leg="topright", ...) {
+  plot.vars=TRUE, plot.pros=FALSE, leg="topright",
+  mar=c(4.5, 4.1, 1, 1), ...) {
   # check inputs
   if (class(model)[1] != "rodeo")
     stop("'model' not of class 'rodeo'; Did you run 'build'?")
@@ -110,6 +113,8 @@ run.scenarios <- function(model, times, scenarios=NULL,
   }
   # plot if requested
   if (plot.vars || plot.pros) {
+    omar <- graphics::par("mar")
+    graphics::par(mar=mar)
     items <- c(if (plot.vars) model$namesVars() else c(),
       if (plot.pros) model$namesPros() else c())
     nc <- if (length(items) == 1) 1 else if (length(items) <= 6) 2 else 3
@@ -118,8 +123,8 @@ run.scenarios <- function(model, times, scenarios=NULL,
     if (is.null(scenarios)) {
       clr <- c(default="black")
     } else {
-      clr <- stats::setNames(grDevices::colorRampPalette(c("steelblue4","khaki",
-        "darkorange"))(length(scenarios)), names(scenarios))
+      clr <- stats::setNames(grDevices::colorRampPalette(c("steelblue4",
+        "khaki3", "darkorange"))(length(scenarios)), names(scenarios))
     }
     for (it in items) {
       plot(range(times), range(out[,it]), type="n", xlab="time", ylab=it) 
@@ -130,6 +135,7 @@ run.scenarios <- function(model, times, scenarios=NULL,
     }
     graphics::legend(leg, bty="n", lty=1, col=clr, legend=names(clr))
     graphics::par(mfrow=c(1,1))
+    graphics::par(mar=omar)
   }
   # return simulation output for further processing
   out
